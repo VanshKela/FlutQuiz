@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'brain.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 Brain brain = Brain();
 
-void main() => runApp(Quizzler());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  brain.getQuestions();
+  runApp(Quizzler());
+}
 
 class Quizzler extends StatelessWidget {
   @override
@@ -13,7 +19,25 @@ class Quizzler extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Colors.black54,
         body: SafeArea(
-          child: QuizPage(),
+          child: StartPage(),
+        ),
+      ),
+    );
+  }
+}
+
+class StartPage extends StatelessWidget {
+  const StartPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QuizPage()));
+          },
+          child: Text('Start Quiz'),
         ),
       ),
     );
