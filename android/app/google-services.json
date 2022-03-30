@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "744629687687",
+    "project_id": "flutquiz-8d745",
+    "storage_bucket": "flutquiz-8d745.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744629687687:android:c16c517de5713ef96c6f22",
+        "android_client_info": {
+          "package_name": "com.example.flutquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744629687687-3hdqq5n2r37tu58i280os5tpja3j62c8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzV1XG8FXuy-RhVwAZmd6d6u3oB2gw_F8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744629687687-3hdqq5n2r37tu58i280os5tpja3j62c8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
