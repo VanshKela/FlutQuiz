@@ -1,3 +1,4 @@
+import 'package:flutquiz/screens/score_page.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'brain.dart';
@@ -31,13 +32,16 @@ class StartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QuizPage()));
-          },
-          child: Text('Start Quiz'),
+    return Scaffold(
+      body: Container(
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => QuizPage()));
+            },
+            child: Text('Start Quiz'),
+          ),
         ),
       ),
     );
@@ -51,27 +55,44 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> score = [];
+  int scorer = 0;
 
   void check(bool answer) {
     bool correct = brain.answers();
     setState(() {
       if (brain.isFinished() == false) {
+        print(score);
         Alert(
-                context: context,
-                title: "Finished!",
-                desc: "You've reached the end of the quiz.")
-            .show();
-        brain.reset();
-        score.clear();
+          context: context,
+          type: AlertType.success,
+          title: "Quiz Completed",
+          desc: "Click here to see score.",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Score",
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => ScorePage(score: scorer,)));
+                brain.reset();
+                score.clear();
+              },
+              width: 120,
+            )
+          ],
+        ).show();
       }
-      if (answer == correct)
+      if (answer == correct) {
         score.add(
           Icon(
             Icons.check,
             color: Colors.green,
           ),
         );
-      else
+        scorer++;
+      } else
         score.add(
           Icon(
             Icons.close,
@@ -84,70 +105,75 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          flex: 5,
-          child: Center(
-            child: Text(
-              brain.questions(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 5,
+            child: Center(
+              child: Text(
+                brain.questions(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  check(true);
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    check(true);
+                    brain.isFinished();
+                  });
+                },
+                style: TextButton.styleFrom(backgroundColor: Colors.green),
+                child: Text(
+                  'TRUE',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () {
+                  check(false);
                   brain.isFinished();
-                });
-              },
-              style: TextButton.styleFrom(backgroundColor: Colors.green),
-              child: Text(
-                'TRUE',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
+                },
+                child: Text(
+                  'FALSE',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40.0,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                check(false);
-                brain.isFinished();
-              },
-              child: Text(
-                'FALSE',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40.0,
-                ),
-              ),
-            ),
+          Row(
+            children: score,
           ),
-        ),
-        Row(
-          children: score,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
+
+
