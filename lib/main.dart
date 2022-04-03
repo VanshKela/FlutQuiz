@@ -1,4 +1,5 @@
 import 'package:flutquiz/screens/score_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'brain.dart';
@@ -10,13 +11,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   brain.getQuestions();
-  runApp(Quizzler());
+  runApp(const Quizzler());
 }
 
 class Quizzler extends StatelessWidget {
+  const Quizzler({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.black54,
         body: SafeArea(
@@ -33,15 +36,13 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => QuizPage()));
-            },
-            child: Text('Start Quiz'),
-          ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const QuizPage()));
+          },
+          child: const Text('Start Quiz'),
         ),
       ),
     );
@@ -49,6 +50,8 @@ class StartPage extends StatelessWidget {
 }
 
 class QuizPage extends StatefulWidget {
+  const QuizPage({Key? key}) : super(key: key);
+
   @override
   _QuizPageState createState() => _QuizPageState();
 }
@@ -61,7 +64,9 @@ class _QuizPageState extends State<QuizPage> {
     bool correct = brain.answers();
     setState(() {
       if (brain.isFinished() == false) {
-        print(score);
+        if (kDebugMode) {
+          print(score);
+        }
         Alert(
           context: context,
           type: AlertType.success,
@@ -69,13 +74,13 @@ class _QuizPageState extends State<QuizPage> {
           desc: "Click here to see score.",
           buttons: [
             DialogButton(
-              child: Text(
+              child: const Text(
                 "Score",
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => ScorePage(score: scorer,)));
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => ScorePage(score: scorer)));
                 brain.reset();
                 score.clear();
               },
@@ -86,19 +91,20 @@ class _QuizPageState extends State<QuizPage> {
       }
       if (answer == correct) {
         score.add(
-          Icon(
+          const Icon(
             Icons.check,
             color: Colors.green,
           ),
         );
         scorer++;
-      } else
+      } else {
         score.add(
-          Icon(
+          const Icon(
             Icons.close,
             color: Colors.red,
           ),
         );
+      }
       brain.next();
     });
   }
@@ -117,7 +123,7 @@ class _QuizPageState extends State<QuizPage> {
               child: Text(
                 brain.questions(),
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 30.0,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -136,7 +142,7 @@ class _QuizPageState extends State<QuizPage> {
                   });
                 },
                 style: TextButton.styleFrom(backgroundColor: Colors.green),
-                child: Text(
+                child: const Text(
                   'TRUE',
                   style: TextStyle(
                     color: Colors.white,
@@ -156,7 +162,7 @@ class _QuizPageState extends State<QuizPage> {
                   check(false);
                   brain.isFinished();
                 },
-                child: Text(
+                child: const Text(
                   'FALSE',
                   style: TextStyle(
                     color: Colors.white,
@@ -175,5 +181,3 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 }
-
-

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import 'question.dart';
 
@@ -8,13 +9,13 @@ class Brain {
 
   void getQuestions() async {
     QuerySnapshot snap =
-    await FirebaseFirestore.instance.collection('Questions').get();
-    snap.docs.forEach((element) {
+        await FirebaseFirestore.instance.collection('Questions').get();
+    for (var element in snap.docs) {
       _bank.add(Question(element.get('question'), element.get('answer')));
-    });
+    }
   }
 
-  List<Question> _bank = [];
+  final List<Question> _bank = [];
 
   void next() {
     _b++;
@@ -35,7 +36,9 @@ class Brain {
     if (_b <= 13) {
       return true;
     } else {
-      print('false');
+      if (kDebugMode) {
+        print('false');
+      }
 
       return false;
     }
